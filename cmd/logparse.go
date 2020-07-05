@@ -19,6 +19,7 @@ type Log struct {
 	RemoteHost string
 	Time       time.Time
 	Request    string
+	Method     string
 	Status     int
 	Bytes      int
 	Referer    string
@@ -69,6 +70,7 @@ func ParseLines(lines []string) []Log {
 		}
 		lineItem.Status = status
 		lineItem.Bytes = bytes
+		lineItem.Method = result[3]
 		lineItem.Referer = result[9]
 		lineItem.UserAgent = result[10]
 		url := result[4]

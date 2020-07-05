@@ -4,6 +4,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var Source string
+
 var rootCmd = &cobra.Command{
   Use:   "klog",
   Short: "Klog is a log analysing interface",

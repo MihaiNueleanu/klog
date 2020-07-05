@@ -13,7 +13,7 @@
       "env": {
         "CGO_ENABLED": 0
       },
-      "args": ["stats"]
+      "args": ["list", "-c=200"]
     }
   ]
 }

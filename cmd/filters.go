@@ -2,7 +2,8 @@ package cmd
 
 import (
 	"sort"
- 	"strings"
+	"strings"
+	"time"
 )
 
 func CutUrls(lines []Log) []Log{
@@ -15,7 +16,6 @@ func CutUrls(lines []Log) []Log{
 
 		lines[i] = line
 	}
-
 
 	return lines
 }
@@ -45,4 +45,29 @@ func SortByDate(logs []Log) []Log {
 	})
 	
 	return logs;
+}
+
+func FilterByStatus(logs []Log, status int) []Log{
+	var result = []Log{}
+	for _, log := range logs {
+		if(log.Status == status ) {
+			result = append(result, log)
+		}
+	}
+
+	return result
+}
+
+func FilterByLastNumberOfHours(logs []Log, number int) []Log{
+	now := time.Now()
+	time := now.Add(-time.Hour * time.Duration(number))
+
+	for i:=0; i< len(logs); i++ {
+			if logs[i].Time.Before(time) {
+				logs = append(logs[:i], logs[i+1:]...)
+				i--
+			}
+	}
+
+	return logs
 }
