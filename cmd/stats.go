@@ -35,7 +35,7 @@ var listCmd = &cobra.Command{
 
 func init() {
 	listCmd.Flags().IntVarP(&statusCode, "code", "c", 200, "Status code to filter by")
-	listCmd.Flags().IntVarP(&hoursBack, "back", "b", 96, "Number of hours back")
+	listCmd.Flags().IntVarP(&hoursBack, "back", "b", 168, "Number of hours back")
 
   rootCmd.AddCommand(listCmd)
 }
