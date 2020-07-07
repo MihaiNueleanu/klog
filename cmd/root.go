@@ -6,6 +6,9 @@ import (
 
 var Source string
 
+var StatusCode int
+var HoursBack int
+
 var rootCmd = &cobra.Command{
   Use:   "klog",
   Short: "Klog is a log analysing interface",
@@ -18,6 +21,8 @@ func Execute() error {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringP("author", "a", "Mihai Nueleanu", "author name for copyright attribution")
+  rootCmd.PersistentFlags().StringP("author", "a", "Mihai Nueleanu", "author name for copyright attribution")
+  listCmd.Flags().IntVarP(&StatusCode, "code", "c", 200, "Status code to filter by")
+	listCmd.Flags().IntVarP(&HoursBack, "back", "b", 168, "Number of hours back")
 }
 

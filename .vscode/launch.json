@@ -10,10 +10,8 @@
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}/main.go",
-      "env": {
-        "CGO_ENABLED": 0
-      },
-      "args": ["list", "-c=200"]
+      "env": {},
+      "args": ["stats"]
     }
   ]
 }

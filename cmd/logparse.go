@@ -1,17 +1,17 @@
 package cmd
 
 import (
-	"time"
-	"bytes"
-	"regexp"
-	"log"
-	"strconv"
-	"io/ioutil"
-	"fmt"
-	"compress/gzip"
 	"bufio"
+	"bytes"
+	"compress/gzip"
+	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
+	"time"
 )
 
 // Log type
@@ -27,7 +27,7 @@ type Log struct {
 	URL        string
 }
 
-// ParseLines takes lines and return Log objects
+// ParseLines - takes lines and return Log objects
 func ParseLines(lines []string) []Log {
 	var items []Log
 
@@ -87,7 +87,7 @@ func ParseLines(lines []string) []Log {
 	return items
 }
 
-// ReadFiles discovers the files in the logs folder
+// ReadFiles - discovers the files in the logs folder
 func ReadFiles() []string {
 	files, err := ioutil.ReadDir("logs")
 	if err != nil {
@@ -106,7 +106,7 @@ func ReadFiles() []string {
 	return fileNames
 }
 
-// LoadFiles loads the contents of the files in memory
+// LoadFiles - loads the contents of the files in memory
 func LoadFiles(fileNames []string) []string {
 	var lines []string
 

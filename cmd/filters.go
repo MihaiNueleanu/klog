@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// CutUrls - crop the length of urls
 func CutUrls(lines []Log) []Log{
 	for i, line := range lines {
 		tmp := []rune(line.URL)
@@ -38,7 +39,7 @@ func FilterLogsByFileTypes(lines []Log) []Log {
 	return lines
 }
 
-// SortByDate orders the logs by request date
+// SortByDate - orders the logs by request date
 func SortByDate(logs []Log) []Log {
 	sort.Slice(logs, func(i, j int) bool { 
 		return logs[i].Time.Before(logs[j].Time)
@@ -47,6 +48,7 @@ func SortByDate(logs []Log) []Log {
 	return logs;
 }
 
+// FilterByStatus - filter logs by status code
 func FilterByStatus(logs []Log, status int) []Log{
 	var result = []Log{}
 	for _, log := range logs {
@@ -58,6 +60,7 @@ func FilterByStatus(logs []Log, status int) []Log{
 	return result
 }
 
+// FilterByLastNumberOfHours - filter by timestamp
 func FilterByLastNumberOfHours(logs []Log, number int) []Log{
 	now := time.Now()
 	time := now.Add(-time.Hour * time.Duration(number))
