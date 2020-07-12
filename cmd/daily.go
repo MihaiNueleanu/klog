@@ -12,8 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var statsCmd = &cobra.Command{
-  Use:   "stats",
+var dailyCmd = &cobra.Command{
+  Use:   "daily",
   Short: "Print the version number of KLog",
   Long:  `All software has versions. This is KLog's`,
   Run: func(cmd *cobra.Command, args []string) {
@@ -108,5 +108,5 @@ func max(values []int) int {
 }
 
 func init() {
-  rootCmd.AddCommand(statsCmd)
+  rootCmd.AddCommand(dailyCmd)
 }
