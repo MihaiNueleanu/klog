@@ -1,11 +1,14 @@
 package cmd
 
 import (
-	"log"
+	"context"
 
-	ui "github.com/gizak/termui/v3"
-	"github.com/gizak/termui/v3/widgets"
-
+	"github.com/mum4k/termdash"
+	"github.com/mum4k/termdash/container"
+	"github.com/mum4k/termdash/linestyle"
+	"github.com/mum4k/termdash/terminal/termbox"
+	"github.com/mum4k/termdash/terminal/terminalapi"
+	"github.com/mum4k/termdash/widgets/barchart"
 	"github.com/spf13/cobra"
 )
 
@@ -38,56 +41,70 @@ var statsCmd = &cobra.Command{
 func plot(logs []Log) {
 	values, labels := getData(logs)
 
-	if err := ui.Init(); err != nil {
-		log.Fatalf("failed to initialize termui: %v", err)
-	}
+	term, _ := termbox.New()
 
-	defer ui.Close()
+	defer term.Close()
 
-	chart :=widgets.NewBarChart()
+	ctx, cancel := context.WithCancel(context.Background())
+	bc, _ := barchart.New(
+		barchart.ShowValues(),
+		barchart.Labels(labels),
+	)
 
-	chart.Data = values
-	chart.Labels = labels
-	chart.Title = "Plot chart"
-	chart.SetRect(0, 0, 100, 20)
-	chart.BarWidth = 7
-	chart.BarColors = []ui.Color{ui.ColorRed, ui.ColorGreen}
-	chart.LabelStyles = []ui.Style{ui.NewStyle(ui.ColorBlue)}
-	chart.NumStyles = []ui.Style{ui.NewStyle(ui.ColorYellow)}
+	bc.Values(values, max(values) + 1)
+	
+	c, _ := container.New(
+		term,
+		container.Border(linestyle.Light),
+		container.BorderTitle("PRESS Q TO QUIT"),
+		container.PlaceWidget(bc),
+	)
+	
 
-	ui.Render(chart)
-
-	uiEvents := ui.PollEvents()
-	for {
-		e := <-uiEvents
-		switch e.ID {
-		case "q", "<C-c>":
-						return
+	quitter := func(k *terminalapi.Keyboard) {
+		if k.Key == 'q' || k.Key == 'Q' {
+			cancel()
 		}
-	}
+	}	
 
+	err := termdash.Run(ctx, term, c, termdash.KeyboardSubscriber(quitter))
+
+	if err != nil {
+		panic(err)
+	}
 }
 
-func getData(logs []Log) ([]float64, []string) {
+func getData(logs []Log) ([]int, []string) {
 	startTime := logs[0].Time
 	endTime := logs[len(logs)-1].Time
 	firstDay := startTime.YearDay()
 	lastDay := endTime.YearDay()
 	numberOfPoints := lastDay-firstDay + 1
 
-	values := make([]float64, numberOfPoints)
+	values := make([]int, numberOfPoints)
 	labels := make([]string, numberOfPoints)
 
 	for _, log := range logs {
-		
 		day := log.Time.YearDay()
 		index := day - firstDay
 
 		values[index] = values[index] + 1	
-		labels[index] = log.Time.Format("01/02");
+		labels[index] = log.Time.Format("02/01");
 	}
 
 	return values, labels
+}
+
+func max(values []int) int {
+	max := 0
+	
+	for _, val := range values {
+		if (max < val) {
+			max = val
+		}
+	}
+
+	return max
 }
 
 func init() {
