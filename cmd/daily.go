@@ -50,18 +50,18 @@ func plot(logs []Log) {
 	defer term.Close()
 
 	ctx, cancel := context.WithCancel(context.Background())
-	bc, _ := barchart.New(
+	chart, _ := barchart.New(
 		barchart.ShowValues(),
 		barchart.Labels(labels),
 	)
 
-	bc.Values(values, max(values) + 1)
+	chart.Values(values, max(values) + 1)
 	
 	c, _ := container.New(
 		term,
 		container.Border(linestyle.Light),
 		container.BorderTitle("PRESS Q TO QUIT"),
-		container.PlaceWidget(bc),
+		container.PlaceWidget(chart),
 	)
 	
 
