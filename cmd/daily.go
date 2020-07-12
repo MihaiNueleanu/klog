@@ -38,6 +38,10 @@ var dailyCmd = &cobra.Command{
   },
 }
 
+func init() {
+  rootCmd.AddCommand(dailyCmd)
+}
+
 func plot(logs []Log) {
 	values, labels := getData(logs)
 
@@ -105,8 +109,4 @@ func max(values []int) int {
 	}
 
 	return max
-}
-
-func init() {
-  rootCmd.AddCommand(dailyCmd)
 }
