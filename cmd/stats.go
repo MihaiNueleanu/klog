@@ -44,16 +44,16 @@ func plot(logs []Log) {
 
 	defer ui.Close()
 
-	chart :=widgets.NewPlot()
+	chart :=widgets.NewBarChart()
 
-	chart.DataLabels = labels
-	chart.Data = make([][]float64, 1)
-	chart.Data[0] = values
+	chart.Data = values
+	chart.Labels = labels
 	chart.Title = "Plot chart"
-	chart.SetRect(3, 3, 100, 20)
-	chart.AxesColor = ui.ColorWhite
-	chart.LineColors[0] = ui.ColorGreen
-	chart.ShowAxes = true
+	chart.SetRect(0, 0, 100, 20)
+	chart.BarWidth = 7
+	chart.BarColors = []ui.Color{ui.ColorRed, ui.ColorGreen}
+	chart.LabelStyles = []ui.Style{ui.NewStyle(ui.ColorBlue)}
+	chart.NumStyles = []ui.Style{ui.NewStyle(ui.ColorYellow)}
 
 	ui.Render(chart)
 
@@ -71,17 +71,20 @@ func plot(logs []Log) {
 func getData(logs []Log) ([]float64, []string) {
 	startTime := logs[0].Time
 	endTime := logs[len(logs)-1].Time
-	numberOfPoints := int(endTime.Sub(startTime).Hours()) + 1
+	firstDay := startTime.YearDay()
+	lastDay := endTime.YearDay()
+	numberOfPoints := lastDay-firstDay + 1
 
 	values := make([]float64, numberOfPoints)
 	labels := make([]string, numberOfPoints)
 
-	for k, log := range logs {
-		hour := log.Time.Sub(startTime).Hours()
-		index := int(hour)
+	for _, log := range logs {
+		
+		day := log.Time.YearDay()
+		index := day - firstDay
 
 		values[index] = values[index] + 1	
-		labels[k] = log.Time.Format("01/02 15:04");
+		labels[index] = log.Time.Format("01/02");
 	}
 
 	return values, labels
